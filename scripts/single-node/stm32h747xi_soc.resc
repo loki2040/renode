@@ -1,0 +1,21 @@
+:name: STM32H747XI
+:description: This script runs the M4 and M7 binaries on the STM32H757XI SOC.
+
+using sysbus
+$name?="STM32H757XI_SOC"
+mach create $name
+machine LoadPlatformDescription @platforms/cpus/stm32h747xi.repl
+
+showAnalyzer sysbus.usart1
+
+$bin_m4 ?= @M4.elf
+$bin_m7 ?= @M7.elf
+
+macro reset
+"""
+    sysbus LoadELF $bin_m4 False True cpu0
+    sysbus LoadELF $bin_m7 False True cpu1
+"""
+
+runMacro $reset
+
